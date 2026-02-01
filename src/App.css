@@ -1,0 +1,142 @@
+.app-shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  font-family: "Inter", system-ui, sans-serif;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.canvas-area {
+  position: relative;
+  overflow: hidden;
+  background: #f8fafc;
+  flex: 1;
+  min-height: 0;
+}
+
+.canvas-root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
+.canvas-area::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.2) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.35;
+  pointer-events: none;
+}
+
+.canvas-area::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.35) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.35) 1px, transparent 1px);
+  background-size: 120px 120px;
+  opacity: 0.2;
+  pointer-events: none;
+}
+
+.floating-bar {
+  position: absolute;
+  z-index: 10;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  backdrop-filter: blur(12px);
+}
+
+.floating-bar--top {
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.floating-bar--top-left {
+  top: 16px;
+  left: 16px;
+}
+
+.floating-bar--top-right {
+  top: 16px;
+  right: 16px;
+}
+
+.floating-bar--left {
+  top: 50%;
+  left: 16px;
+  transform: translateY(-50%);
+  flex-direction: column;
+}
+
+.floating-bar--right {
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  flex-direction: column;
+}
+
+.floating-bar--bottom-left {
+  left: 16px;
+  bottom: 16px;
+}
+
+.floating-bar--bottom {
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+}
+
+.floating-bar--bottom-right {
+  right: 16px;
+  bottom: 16px;
+}
+
+.brand {
+  font-weight: 600;
+  font-size: 12px;
+  padding: 0 4px;
+}
+
+.icon-btn {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.icon-btn:hover {
+  border-color: #cbd5f5;
+  background: #f1f5f9;
+}
+
+.icon-btn--active {
+  border-color: #93c5fd;
+  background: #dbeafe;
+}
+
+.floating-label {
+  font-size: 12px;
+  color: #475569;
+  padding: 0 6px;
+}
