@@ -3,6 +3,12 @@ import type { CanvasState } from "@/types/canvas";
 import type { Renderer } from "@/engine/renderer/types";
 import { getShapeHandler } from "@/shapes/registry";
 import type { RenderContext } from "@/shapes/types";
+import {
+  getControlHandles,
+  getHandleSize,
+  getSelectionBounds,
+  rotatePoint
+} from "@/controls/utils";
 
 type NodeView = Container;
 
@@ -60,8 +66,15 @@ export class PixiRenderer implements Renderer {
   }
 
   private renderNodes(state: CanvasState) {
-    this.nodesLayer.removeChildren();
-    this.nodeViews.clear();
+    const prevIds = new Set(this.nodeViews.keys());
+    const nextIds = new Set(state.nodes.map((node) => node.id));
+    this.nodeViews.forEach((view, id) => {
+      if (!nextIds.has(id)) {
+        view.parent?.removeChild(view);
+        view.destroy({ children: true });
+        this.nodeViews.delete(id);
+      }
+    });
     const renderContext: RenderContext = {
       stage: this.app.stage,
       layers: {
@@ -79,7 +92,7 @@ export class PixiRenderer implements Renderer {
       }
       handler.render(node as never, renderContext);
       const view = this.nodeViews.get(node.id);
-      if (view) {
+      if (view && !prevIds.has(node.id)) {
         this.onNodeMounted?.(node.id, view);
       }
     });
@@ -117,18 +130,18 @@ export class PixiRenderer implements Renderer {
     const box = state.selection.box;
     if (box) {
       overlay.lineStyle(1, 0x3b82f6, 0.9);
-      overlay.beginFill(0x93c5fd, 0.15);
+      overlay.beginFill(0x60a5fa, 0.12);
       overlay.drawRect(box.x, box.y, box.width, box.height);
       overlay.endFill();
     }
 
     if (state.selection.nodeIds.length > 0) {
-      state.nodes.forEach((node) => {
-        if (!state.selection.nodeIds.includes(node.id)) {
-          return;
-        }
+      const selectedNodes = state.nodes.filter((node) =>
+        state.selection.nodeIds.includes(node.id)
+      );
+      const boundsList = selectedNodes.map((node) => {
         const handler = getShapeHandler(node as never);
-        const bounds = handler?.getBounds
+        return handler?.getBounds
           ? handler.getBounds(node as never)
           : {
               x: node.position.x,
@@ -136,9 +149,78 @@ export class PixiRenderer implements Renderer {
               width: node.size.width,
               height: node.size.height
             };
-        overlay.lineStyle(2, 0x2563eb, 0.9);
-        overlay.drawRect(bounds.x - 4, bounds.y - 4, bounds.width + 8, bounds.height + 8);
       });
+      const selectionBounds = getSelectionBounds(boundsList);
+      if (selectionBounds) {
+        const isSingle = state.selection.nodeIds.length === 1;
+        const handleSize = getHandleSize(state.viewport.scale);
+        const handles = getControlHandles(selectionBounds, handleSize, isSingle);
+        const half = handleSize / 2;
+        const padding = 4;
+        const paddedBounds = {
+          x: selectionBounds.x - padding,
+          y: selectionBounds.y - padding,
+          width: selectionBounds.width + padding * 2,
+          height: selectionBounds.height + padding * 2
+        };
+        const center = {
+          x: selectionBounds.x + selectionBounds.width / 2,
+          y: selectionBounds.y + selectionBounds.height / 2
+        };
+        const rotation = isSingle ? selectedNodes[0]?.rotation ?? 0 : 0;
+
+        overlay.lineStyle(2, 0x2563eb, 1);
+        if (rotation !== 0) {
+          const corners = [
+            { x: paddedBounds.x, y: paddedBounds.y },
+            { x: paddedBounds.x + paddedBounds.width, y: paddedBounds.y },
+            {
+              x: paddedBounds.x + paddedBounds.width,
+              y: paddedBounds.y + paddedBounds.height
+            },
+            { x: paddedBounds.x, y: paddedBounds.y + paddedBounds.height }
+          ].map((point) => rotatePoint(point, center, rotation));
+          overlay.moveTo(corners[0].x, corners[0].y);
+          overlay.lineTo(corners[1].x, corners[1].y);
+          overlay.lineTo(corners[2].x, corners[2].y);
+          overlay.lineTo(corners[3].x, corners[3].y);
+          overlay.lineTo(corners[0].x, corners[0].y);
+        } else {
+          overlay.drawRect(
+            paddedBounds.x,
+            paddedBounds.y,
+            paddedBounds.width,
+            paddedBounds.height
+          );
+        }
+
+        handles.forEach((handle) => {
+          const position =
+            rotation !== 0 ? rotatePoint(handle.position, center, rotation) : handle.position;
+          if (handle.id === "rotate") {
+            const anchor = rotatePoint(
+              {
+                x: selectionBounds.x + selectionBounds.width / 2,
+                y: selectionBounds.y - handleSize * 1.2
+              },
+              center,
+              rotation
+            );
+            overlay.lineStyle(1, 0x2563eb, 0.9);
+            overlay.moveTo(anchor.x, anchor.y);
+            overlay.lineTo(position.x, position.y);
+            overlay.beginFill(0xffffff, 1);
+            overlay.lineStyle(1.5, 0x2563eb, 1);
+            overlay.drawCircle(position.x, position.y, half);
+            overlay.endFill();
+            return;
+          }
+          overlay.beginFill(0xffffff, 1);
+          overlay.lineStyle(1.5, 0x2563eb, 1);
+          overlay.drawRect(position.x - half, position.y - half, handleSize, handleSize);
+          overlay.endFill();
+        });
+      }
     }
 
     this.overlayLayer.addChild(overlay);

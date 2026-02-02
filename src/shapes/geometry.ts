@@ -40,12 +40,25 @@ export const geometryHandler: ShapeHandler<GeometryShape> = {
       return;
     }
 
-    const container = new Container();
-    container.position.set(shape.position.x, shape.position.y);
+    const cached = viewCache.get(shape.id);
+    const container = cached instanceof Container ? cached : new Container();
+    const rotation = shape.rotation ?? 0;
+    const pivotX = shape.size.width / 2;
+    const pivotY = shape.size.height / 2;
+    container.pivot.set(pivotX, pivotY);
+    container.position.set(shape.position.x + pivotX, shape.position.y + pivotY);
+    container.rotation = rotation;
     container.eventMode = "static";
     container.cursor = "pointer";
 
-    const body = new Graphics();
+    let body = container.children.find((child) => child instanceof Graphics) as
+      | Graphics
+      | undefined;
+    if (!body) {
+      body = new Graphics();
+      container.addChild(body);
+    }
+
     const fill = shape.style?.fill ?? "#ffffff";
     const stroke = shape.style?.stroke ?? "#475569";
     const strokeWidth = shape.style?.strokeWidth ?? 1;
@@ -53,6 +66,7 @@ export const geometryHandler: ShapeHandler<GeometryShape> = {
     const fillColor = Number.parseInt(fill.replace("#", "0x"), 16);
     const strokeColor = Number.parseInt(stroke.replace("#", "0x"), 16);
 
+    body.clear();
     body.lineStyle(strokeWidth, strokeColor, opacity);
     body.beginFill(fillColor, opacity);
 
@@ -69,8 +83,9 @@ export const geometryHandler: ShapeHandler<GeometryShape> = {
     }
 
     body.endFill();
-    container.addChild(body);
-    nodesLayer.addChild(container);
+    if (container.parent !== nodesLayer) {
+      nodesLayer.addChild(container);
+    }
     viewCache.set(shape.id, container);
   },
   hitTest: (shape, point) =>

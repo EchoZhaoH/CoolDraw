@@ -8,6 +8,7 @@ import {
   StickyNote
 } from "lucide-react";
 import { useCanvasActions } from "@/ui/hooks/useCanvasStore";
+import data from "../../../skills/china-population-2025-chart.json";
 
 const LeftToolbar = () => {
   const actions = useCanvasActions();
@@ -32,7 +33,7 @@ const LeftToolbar = () => {
       <button type="button" className="icon-btn">
         <PencilLine size={16} />
       </button>
-      <button type="button" className="icon-btn" onClick={() => actions.addGeometry("rect")}>
+      <button type="button" className="icon-btn" onClick={() => actions.addNodes(data)}>
         <StickyNote size={16} />
       </button>
     </aside>

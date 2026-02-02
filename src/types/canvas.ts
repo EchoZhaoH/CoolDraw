@@ -3,7 +3,16 @@ export type Position = {
   y: number;
 };
 
+export type Point = Position;
+
 export type Size = {
+  width: number;
+  height: number;
+};
+
+export type Rect = {
+  x: number;
+  y: number;
   width: number;
   height: number;
 };
@@ -14,6 +23,7 @@ export type CanvasNode = {
   kind?: "rect" | "ellipse";
   position: Position;
   size: Size;
+  rotation?: number;
   data?: Record<string, unknown>;
 };
 

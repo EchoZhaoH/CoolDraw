@@ -1,0 +1,202 @@
+[
+  {
+    "id": "title_2025_population",
+    "type": "text",
+    "position": { "x": 120, "y": 60 },
+    "size": { "width": 520, "height": 32 },
+    "data": { "text": "2025年中国人口分布（示意）", "fontSize": 20, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "subtitle_unit",
+    "type": "text",
+    "position": { "x": 120, "y": 90 },
+    "size": { "width": 200, "height": 20 },
+    "data": { "text": "单位：百万", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  },
+  {
+    "id": "y_axis_label",
+    "type": "text",
+    "position": { "x": 36, "y": 140 },
+    "size": { "width": 80, "height": 20 },
+    "data": { "text": "人口（百万）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  },
+  {
+    "id": "axis_y",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 160 },
+    "size": { "width": 2, "height": 260 },
+    "style": { "fill": "#94a3b8" }
+  },
+  {
+    "id": "axis_x",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 420 },
+    "size": { "width": 520, "height": 2 },
+    "style": { "fill": "#94a3b8" }
+  },
+  {
+    "id": "grid_600",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 168 },
+    "size": { "width": 520, "height": 1 },
+    "style": { "fill": "#e2e8f0", "opacity": 0.7 }
+  },
+  {
+    "id": "grid_400",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 252 },
+    "size": { "width": 520, "height": 1 },
+    "style": { "fill": "#e2e8f0", "opacity": 0.7 }
+  },
+  {
+    "id": "grid_200",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 336 },
+    "size": { "width": 520, "height": 1 },
+    "style": { "fill": "#e2e8f0", "opacity": 0.7 }
+  },
+  {
+    "id": "y_label_600",
+    "type": "text",
+    "position": { "x": 80, "y": 158 },
+    "size": { "width": 36, "height": 16 },
+    "data": { "text": "600", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "right" }
+  },
+  {
+    "id": "y_label_400",
+    "type": "text",
+    "position": { "x": 80, "y": 242 },
+    "size": { "width": 36, "height": 16 },
+    "data": { "text": "400", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "right" }
+  },
+  {
+    "id": "y_label_200",
+    "type": "text",
+    "position": { "x": 80, "y": 326 },
+    "size": { "width": 36, "height": 16 },
+    "data": { "text": "200", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "right" }
+  },
+  {
+    "id": "y_label_0",
+    "type": "text",
+    "position": { "x": 88, "y": 410 },
+    "size": { "width": 28, "height": 16 },
+    "data": { "text": "0", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "right" }
+  },
+  {
+    "id": "bar_east",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 170, "y": 160 },
+    "size": { "width": 90, "height": 260 },
+    "style": { "fill": "#60a5fa", "stroke": "#1d4ed8", "strokeWidth": 1 }
+  },
+  {
+    "id": "bar_central",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 290, "y": 269 },
+    "size": { "width": 90, "height": 151 },
+    "style": { "fill": "#34d399", "stroke": "#047857", "strokeWidth": 1 }
+  },
+  {
+    "id": "bar_west",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 410, "y": 286 },
+    "size": { "width": 90, "height": 134 },
+    "style": { "fill": "#fbbf24", "stroke": "#b45309", "strokeWidth": 1 }
+  },
+  {
+    "id": "bar_northeast",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 530, "y": 378 },
+    "size": { "width": 90, "height": 42 },
+    "style": { "fill": "#f87171", "stroke": "#b91c1c", "strokeWidth": 1 }
+  },
+  {
+    "id": "label_east",
+    "type": "text",
+    "position": { "x": 170, "y": 430 },
+    "size": { "width": 90, "height": 20 },
+    "data": { "text": "东部", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "label_central",
+    "type": "text",
+    "position": { "x": 290, "y": 430 },
+    "size": { "width": 90, "height": 20 },
+    "data": { "text": "中部", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "label_west",
+    "type": "text",
+    "position": { "x": 410, "y": 430 },
+    "size": { "width": 90, "height": 20 },
+    "data": { "text": "西部", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "label_northeast",
+    "type": "text",
+    "position": { "x": 530, "y": 430 },
+    "size": { "width": 90, "height": 20 },
+    "data": { "text": "东北", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "value_east",
+    "type": "text",
+    "position": { "x": 170, "y": 138 },
+    "size": { "width": 90, "height": 18 },
+    "data": { "text": "620", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#1d4ed8", "textAlign": "center" }
+  },
+  {
+    "id": "value_central",
+    "type": "text",
+    "position": { "x": 290, "y": 247 },
+    "size": { "width": 90, "height": 18 },
+    "data": { "text": "360", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#047857", "textAlign": "center" }
+  },
+  {
+    "id": "value_west",
+    "type": "text",
+    "position": { "x": 410, "y": 264 },
+    "size": { "width": 90, "height": 18 },
+    "data": { "text": "320", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#b45309", "textAlign": "center" }
+  },
+  {
+    "id": "value_northeast",
+    "type": "text",
+    "position": { "x": 530, "y": 356 },
+    "size": { "width": 90, "height": 18 },
+    "data": { "text": "100", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#b91c1c", "textAlign": "center" }
+  },
+  {
+    "id": "note_region",
+    "type": "text",
+    "position": { "x": 120, "y": 462 },
+    "size": { "width": 520, "height": 18 },
+    "data": { "text": "区域划分：东部 / 中部 / 西部 / 东北", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  }
+]

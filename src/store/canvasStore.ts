@@ -31,13 +31,19 @@ const initialState: CanvasState = {
 const history = createHistory(initialState);
 const store = createStore(initialState);
 
-const setState = (next: CanvasState) => {
-  history.push(next);
+const setState = (next: CanvasState, options?: { pushHistory?: boolean }) => {
+  const pushHistory = options?.pushHistory ?? true;
+  if (pushHistory) {
+    history.push(next);
+  }
   store.setState(next, { replace: true });
 };
 
-const updateState = (updater: (state: CanvasState) => CanvasState) => {
-  setState(updater(store.getState()));
+const updateState = (
+  updater: (state: CanvasState) => CanvasState,
+  options?: { pushHistory?: boolean }
+) => {
+  setState(updater(store.getState()), options);
 };
 
 const createNode = (partial: Partial<CanvasNode> = {}): CanvasNode => ({
@@ -46,10 +52,18 @@ const createNode = (partial: Partial<CanvasNode> = {}): CanvasNode => ({
   kind: partial.kind ?? "rect",
   position: partial.position ?? { x: 120, y: 120 },
   size: partial.size ?? { width: 160, height: 96 },
+  rotation: partial.rotation ?? 0,
   data: partial.data ?? {}
 });
 
 const actions = {
+  addNodes: (nodes: Partial<CanvasNode>[]) => {
+    updateState((state) => ({
+      ...state,
+      nodes: [...state.nodes, ...nodes.map(createNode)],
+      updatedAt: Date.now()
+    }));
+  },
   addNode: (partial?: Partial<CanvasNode>) => {
     updateState((state) => ({
       ...state,
@@ -112,6 +126,89 @@ const actions = {
         updatedAt: Date.now()
       };
     });
+  },
+  updateNodesTransformPreview: (
+    updates: Array<{
+      id: string;
+      position?: { x: number; y: number };
+      size?: { width: number; height: number };
+      rotation?: number;
+    }>
+  ) => {
+    updateState(
+      (state) => {
+        const map = new Map(updates.map((item) => [item.id, item]));
+        return {
+          ...state,
+          nodes: state.nodes.map((node) => {
+            const next = map.get(node.id);
+            if (!next) {
+              return node;
+            }
+            return {
+              ...node,
+              position: next.position ?? node.position,
+              size: next.size ?? node.size,
+              rotation: next.rotation ?? node.rotation
+            };
+          }),
+          updatedAt: Date.now()
+        };
+      },
+      { pushHistory: false }
+    );
+  },
+  updateNodesTransformCommit: (
+    updates: Array<{
+      id: string;
+      position?: { x: number; y: number };
+      size?: { width: number; height: number };
+      rotation?: number;
+    }>
+  ) => {
+    updateState((state) => {
+      const map = new Map(updates.map((item) => [item.id, item]));
+      return {
+        ...state,
+        nodes: state.nodes.map((node) => {
+          const next = map.get(node.id);
+          if (!next) {
+            return node;
+          }
+          return {
+            ...node,
+            position: next.position ?? node.position,
+            size: next.size ?? node.size,
+            rotation: next.rotation ?? node.rotation
+          };
+        }),
+        updatedAt: Date.now()
+      };
+    });
+  },
+  updateNodesPositionPreview: (
+    updates: Array<{ id: string; x: number; y: number }>
+  ) => {
+    updateState(
+      (state) => {
+        const map = new Map(updates.map((item) => [item.id, item]));
+        return {
+          ...state,
+          nodes: state.nodes.map((node) => {
+            const next = map.get(node.id);
+            if (!next) {
+              return node;
+            }
+            return {
+              ...node,
+              position: { x: next.x, y: next.y }
+            };
+          }),
+          updatedAt: Date.now()
+        };
+      },
+      { pushHistory: false }
+    );
   },
   removeNode: (id: string) => {
     updateState((state) => ({
