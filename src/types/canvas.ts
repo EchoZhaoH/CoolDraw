@@ -17,15 +17,57 @@ export type Rect = {
   height: number;
 };
 
-export type CanvasNode = {
+export type CanvasNodeType = "geometry" | "text" | "connector";
+
+export type BaseNode<TType extends CanvasNodeType = CanvasNodeType> = {
   id: string;
-  type: string;
-  kind?: "rect" | "ellipse";
+  type: TType;
   position: Position;
   size: Size;
   rotation?: number;
   data?: Record<string, unknown>;
 };
+
+export type CanvasGeometryNode = BaseNode<"geometry"> & {
+  kind?: "rect" | "ellipse";
+};
+
+export type CanvasTextNode = BaseNode<"text">;
+
+export type ConnectorEndpoint = {
+  nodeId?: string;
+  anchorId?: string;
+  position?: Position;
+  offset?: Position;
+};
+
+export type ArrowStyle = {
+  type?: "none" | "triangle" | "circle" | "diamond";
+  size?: number;
+  filled?: boolean;
+};
+
+export type ConnectorStyle = {
+  stroke?: string;
+  strokeWidth?: number;
+  dash?: number[];
+  opacity?: number;
+  lineType?: "straight" | "orthogonal" | "curve";
+  arrowStart?: ArrowStyle;
+  arrowEnd?: ArrowStyle;
+};
+
+export type CanvasConnectorNode = BaseNode<"connector"> & {
+  mode: "free" | "linked";
+  source: ConnectorEndpoint;
+  target: ConnectorEndpoint;
+  style?: ConnectorStyle;
+};
+
+export type CanvasNode =
+  | CanvasGeometryNode
+  | CanvasTextNode
+  | CanvasConnectorNode;
 
 export type CanvasEdge = {
   id: string;

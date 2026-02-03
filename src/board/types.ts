@@ -1,9 +1,11 @@
-import type { CanvasState, Selection, Viewport } from "@/types/canvas";
+import type { CanvasNode, CanvasState, Selection, Viewport } from "@/types/canvas";
 
 export type BoardStore = {
   getState: () => CanvasState;
   subscribe: (listener: (state: CanvasState) => void) => () => void;
   actions: {
+    updateNode: (id: string, patch: Partial<CanvasNode>) => void;
+    updateNodePreview: (id: string, patch: Partial<CanvasNode>) => void;
     setSelection: (selection: Selection) => void;
     clearSelection: () => void;
     toggleSelection: (nodeId: string) => void;

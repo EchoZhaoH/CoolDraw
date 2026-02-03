@@ -1,5 +1,7 @@
-import { Container, Graphics } from "pixi.js";
+import { Graphics } from "pixi.js";
 import type { GeometryShape, Point, Rect, ShapeHandler } from "./types";
+import { ensureNodeView } from "./render/nodeView";
+import { getGeometryStyle } from "./render/style";
 
 const getBounds = (shape: GeometryShape): Rect => ({
   x: shape.position.x,
@@ -34,22 +36,16 @@ const hitTestEllipse = (shape: GeometryShape, point: Point) => {
 
 export const geometryHandler: ShapeHandler<GeometryShape> = {
   render: (shape, ctx) => {
-    const nodesLayer = ctx.layers?.nodes;
-    const viewCache = ctx.viewCache;
-    if (!(nodesLayer instanceof Container) || !(viewCache instanceof Map)) {
+    const container = ensureNodeView(ctx, {
+      id: shape.id,
+      position: shape.position,
+      size: shape.size,
+      rotation: shape.rotation,
+      cursor: "pointer"
+    });
+    if (!container) {
       return;
     }
-
-    const cached = viewCache.get(shape.id);
-    const container = cached instanceof Container ? cached : new Container();
-    const rotation = shape.rotation ?? 0;
-    const pivotX = shape.size.width / 2;
-    const pivotY = shape.size.height / 2;
-    container.pivot.set(pivotX, pivotY);
-    container.position.set(shape.position.x + pivotX, shape.position.y + pivotY);
-    container.rotation = rotation;
-    container.eventMode = "static";
-    container.cursor = "pointer";
 
     let body = container.children.find((child) => child instanceof Graphics) as
       | Graphics
@@ -59,12 +55,8 @@ export const geometryHandler: ShapeHandler<GeometryShape> = {
       container.addChild(body);
     }
 
-    const fill = shape.style?.fill ?? "#ffffff";
-    const stroke = shape.style?.stroke ?? "#475569";
-    const strokeWidth = shape.style?.strokeWidth ?? 1;
-    const opacity = shape.style?.opacity ?? 1;
-    const fillColor = Number.parseInt(fill.replace("#", "0x"), 16);
-    const strokeColor = Number.parseInt(stroke.replace("#", "0x"), 16);
+    const { fillColor, strokeColor, strokeWidth, opacity } =
+      getGeometryStyle(shape);
 
     body.clear();
     body.lineStyle(strokeWidth, strokeColor, opacity);
@@ -83,16 +75,24 @@ export const geometryHandler: ShapeHandler<GeometryShape> = {
     }
 
     body.endFill();
-    if (container.parent !== nodesLayer) {
-      nodesLayer.addChild(container);
-    }
-    viewCache.set(shape.id, container);
   },
   hitTest: (shape, point) =>
     shape.kind === "ellipse"
       ? hitTestEllipse(shape, point)
       : hitTestRect(shape, point),
   getBounds,
+  getAnchors: (shape) => {
+    const bounds = getBounds(shape);
+    const cx = bounds.x + bounds.width / 2;
+    const cy = bounds.y + bounds.height / 2;
+    return [
+      { id: "c", position: { x: cx, y: cy } },
+      { id: "n", position: { x: cx, y: bounds.y } },
+      { id: "e", position: { x: bounds.x + bounds.width, y: cy } },
+      { id: "s", position: { x: cx, y: bounds.y + bounds.height } },
+      { id: "w", position: { x: bounds.x, y: cy } }
+    ];
+  },
   traits: {
     draggable: true,
     resizable: true,

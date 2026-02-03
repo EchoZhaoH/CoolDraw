@@ -1,8 +1,20 @@
 import type { EnginePointerEvent } from "@/engine/events/types";
 import { CanvasEngine } from "@/engine/CanvasEngine";
 import { getRotationDelta, resizeBounds } from "@/controls/utils";
+import {
+  findAnchorAtPoint,
+  getConnectorPoints,
+  hitTestEndpoint,
+  resolveConnectorMode
+} from "@/shapes/connector-utils";
 import { getControlHit } from "./controls";
-import { getSelectedBounds, getNodeBounds, normalizeBox, intersects, screenToWorld } from "./helpers";
+import {
+  getSelectedBounds,
+  getNodeBounds,
+  normalizeBox,
+  intersects,
+  screenToWorld
+} from "./helpers";
 import { mergeSelectionIds } from "./selection";
 import { getNextViewportFromWheel } from "./viewport";
 import type { BoardOptions, BoardStore } from "./types";
@@ -32,6 +44,16 @@ type ControlSession = {
   >;
 };
 
+type ConnectorSession = {
+  active: boolean;
+  connectorId: string;
+  endpointKey: "source" | "target";
+  baseConnector: {
+    source: { nodeId?: string; anchorId?: string; position?: { x: number; y: number } };
+    target: { nodeId?: string; anchorId?: string; position?: { x: number; y: number } };
+  };
+};
+
 export class Board {
   private container: HTMLElement;
   private store: BoardStore;
@@ -46,6 +68,7 @@ export class Board {
   private dragSession: DragSession | null = null;
   private panSession: PanSession | null = null;
   private controlSession: ControlSession | null = null;
+  private connectorSession: ConnectorSession | null = null;
   private spacePressed = false;
 
   constructor(options: BoardOptions) {
@@ -106,45 +129,83 @@ export class Board {
     const worldPosition = screenToWorld(viewport, event.position);
     const currentSelection = state.selection.nodeIds;
     if (currentSelection.length > 0) {
+      const hasConnector = state.nodes.some(
+        (node) => currentSelection.includes(node.id) && node.type === "connector"
+      );
       const selectionBounds = getSelectedBounds(state, currentSelection);
       if (selectionBounds) {
-        const hit = getControlHit(
-          worldPosition,
-          selectionBounds,
-          currentSelection,
-          state.nodes,
-          viewport.scale
-        );
-        if (hit) {
-          const baseNodes: ControlSession["baseNodes"] = {};
-          state.nodes.forEach((node) => {
-            if (currentSelection.includes(node.id)) {
-              baseNodes[node.id] = {
-                position: { ...node.position },
-                size: { ...node.size },
-                rotation: node.rotation ?? 0
-              };
-            }
-          });
-          const singleRotation =
-            currentSelection.length === 1
-              ? baseNodes[currentSelection[0]].rotation
-              : 0;
-          this.controlSession = {
-            active: true,
-            handleId: hit.hit.id,
-            targetIds: currentSelection,
-            startPointer: worldPosition,
-            startBounds: selectionBounds,
-            startRotation: singleRotation,
-            baseNodes
-          };
-          return;
+        if (!hasConnector) {
+          const hit = getControlHit(
+            worldPosition,
+            selectionBounds,
+            currentSelection,
+            state.nodes,
+            viewport.scale
+          );
+          if (hit) {
+            const baseNodes: ControlSession["baseNodes"] = {};
+            state.nodes.forEach((node) => {
+              if (currentSelection.includes(node.id)) {
+                baseNodes[node.id] = {
+                  position: { ...node.position },
+                  size: { ...node.size },
+                  rotation: node.rotation ?? 0
+                };
+              }
+            });
+            const singleRotation =
+              currentSelection.length === 1
+                ? baseNodes[currentSelection[0]].rotation
+                : 0;
+            this.controlSession = {
+              active: true,
+              handleId: hit.hit.id,
+              targetIds: currentSelection,
+              startPointer: worldPosition,
+              startBounds: selectionBounds,
+              startRotation: singleRotation,
+              baseNodes
+            };
+            return;
+          }
         }
       }
     }
 
     if (event.targetId) {
+      const targetNode = state.nodes.find((node) => node.id === event.targetId);
+      if (targetNode?.type === "connector") {
+        const { source, target } = getConnectorPoints(targetNode, state);
+        const hitRadius = 8 / viewport.scale;
+        const endpointKey = hitTestEndpoint(worldPosition, source, target, hitRadius);
+        if (endpointKey) {
+          this.store.actions.setSelection({
+            nodeIds: [targetNode.id],
+            edgeIds: [],
+            groupIds: [],
+            mode: "single",
+            box: undefined
+          });
+          this.connectorSession = {
+            active: true,
+            connectorId: targetNode.id,
+            endpointKey,
+            baseConnector: {
+              source: { ...targetNode.source },
+              target: { ...targetNode.target }
+            }
+          };
+          return;
+        }
+        this.store.actions.setSelection({
+          nodeIds: [targetNode.id],
+          edgeIds: [],
+          groupIds: [],
+          mode: "single",
+          box: undefined
+        });
+        return;
+      }
       if (event.shiftKey) {
         this.store.actions.toggleSelection(event.targetId);
         this.boxStart = null;
@@ -244,6 +305,28 @@ export class Board {
       return;
     }
 
+    if (this.connectorSession?.active) {
+      const session = this.connectorSession;
+      const viewport = this.getViewport();
+      const worldPosition = screenToWorld(viewport, event.position);
+      const state = this.store.getState();
+      const anchorHit = findAnchorAtPoint(state, worldPosition, 8 / viewport.scale);
+      const endpoint =
+        anchorHit
+          ? { nodeId: anchorHit.nodeId, anchorId: anchorHit.anchorId }
+          : { position: worldPosition };
+      const nextSource =
+        session.endpointKey === "source" ? endpoint : session.baseConnector.source;
+      const nextTarget =
+        session.endpointKey === "target" ? endpoint : session.baseConnector.target;
+      this.store.actions.updateNodePreview(session.connectorId, {
+        source: nextSource,
+        target: nextTarget,
+        mode: resolveConnectorMode(nextSource, nextTarget)
+      });
+      return;
+    }
+
     if (this.panSession?.active) {
       const { start, baseViewport } = this.panSession;
       const dx = event.position.x - start.x;
@@ -333,6 +416,29 @@ export class Board {
       return;
     }
 
+    if (this.connectorSession?.active) {
+      const session = this.connectorSession;
+      const viewport = this.getViewport();
+      const worldPosition = screenToWorld(viewport, event.position);
+      const state = this.store.getState();
+      const anchorHit = findAnchorAtPoint(state, worldPosition, 8 / viewport.scale);
+      const endpoint =
+        anchorHit
+          ? { nodeId: anchorHit.nodeId, anchorId: anchorHit.anchorId }
+          : { position: worldPosition };
+      const nextSource =
+        session.endpointKey === "source" ? endpoint : session.baseConnector.source;
+      const nextTarget =
+        session.endpointKey === "target" ? endpoint : session.baseConnector.target;
+      this.store.actions.updateNode(session.connectorId, {
+        source: nextSource,
+        target: nextTarget,
+        mode: resolveConnectorMode(nextSource, nextTarget)
+      });
+      this.connectorSession = null;
+      return;
+    }
+
     if (this.dragSession?.active) {
       const { start, basePositions } = this.dragSession;
       const viewport = this.getViewport();
@@ -362,7 +468,7 @@ export class Board {
     } else {
       const nodes = this.store.getState().nodes;
       const hitIds = nodes
-        .filter((node) => intersects(box, getNodeBounds(node)))
+        .filter((node) => intersects(box, getNodeBounds(this.store.getState(), node)))
         .map((node) => node.id);
       const merged = mergeSelectionIds(this.baseSelection, hitIds);
       this.store.actions.setSelection({

@@ -9,6 +9,11 @@ import {
   getSelectionBounds,
   rotatePoint
 } from "@/controls/utils";
+import {
+  buildPathPoints,
+  getBoundsFromPoints,
+  getConnectorPoints
+} from "@/shapes/connector-utils";
 
 type NodeView = Container;
 
@@ -82,7 +87,8 @@ export class PixiRenderer implements Renderer {
         edges: this.edgesLayer,
         overlay: this.overlayLayer
       },
-      viewCache: this.nodeViews
+      viewCache: this.nodeViews,
+      state
     };
 
     state.nodes.forEach((node) => {
@@ -139,7 +145,16 @@ export class PixiRenderer implements Renderer {
       const selectedNodes = state.nodes.filter((node) =>
         state.selection.nodeIds.includes(node.id)
       );
+      const hasConnector = selectedNodes.some((node) => node.type === "connector");
       const boundsList = selectedNodes.map((node) => {
+        if (node.type === "connector") {
+          const { source, target, lineType } = getConnectorPoints(
+            node as never,
+            state
+          );
+          const points = buildPathPoints(source, target, lineType);
+          return getBoundsFromPoints(points);
+        }
         const handler = getShapeHandler(node as never);
         return handler?.getBounds
           ? handler.getBounds(node as never)
@@ -154,7 +169,9 @@ export class PixiRenderer implements Renderer {
       if (selectionBounds) {
         const isSingle = state.selection.nodeIds.length === 1;
         const handleSize = getHandleSize(state.viewport.scale);
-        const handles = getControlHandles(selectionBounds, handleSize, isSingle);
+        const handles = hasConnector
+          ? []
+          : getControlHandles(selectionBounds, handleSize, isSingle);
         const half = handleSize / 2;
         const padding = 4;
         const paddedBounds = {

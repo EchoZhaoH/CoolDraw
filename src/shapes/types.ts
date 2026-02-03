@@ -69,6 +69,7 @@ export type RenderContext = {
     overlay?: unknown;
   };
   viewCache?: Map<string, unknown>;
+  state?: unknown;
 };
 
 export type InteractionContext = {

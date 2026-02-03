@@ -1,13 +1,19 @@
 import type { CanvasNode, CanvasState, Point, Rect, Selection, Viewport } from "@/types/canvas";
 import { getShapeHandler } from "@/shapes/registry";
 import { getSelectionBounds as mergeSelectionBounds } from "@/controls/utils";
+import { buildPathPoints, getBoundsFromPoints, getConnectorPoints } from "@/shapes/connector-utils";
 
 export const screenToWorld = (viewport: Viewport, point: Point) => ({
   x: (point.x - viewport.x) / viewport.scale,
   y: (point.y - viewport.y) / viewport.scale
 });
 
-export const getNodeBounds = (node: CanvasNode): Rect => {
+export const getNodeBounds = (state: CanvasState, node: CanvasNode): Rect => {
+  if (node.type === "connector") {
+    const { source, target, lineType } = getConnectorPoints(node as never, state);
+    const points = buildPathPoints(source, target, lineType);
+    return getBoundsFromPoints(points);
+  }
   const handler = getShapeHandler(node as never);
   if (handler?.getBounds) {
     return handler.getBounds(node as never);
@@ -22,7 +28,7 @@ export const getNodeBounds = (node: CanvasNode): Rect => {
 
 export const getSelectedBounds = (state: CanvasState, nodeIds: string[]) => {
   const nodes = state.nodes.filter((node) => nodeIds.includes(node.id));
-  const boundsList = nodes.map(getNodeBounds);
+  const boundsList = nodes.map((node) => getNodeBounds(state, node));
   return mergeSelectionBounds(boundsList);
 };
 

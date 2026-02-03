@@ -1,5 +1,7 @@
-import { Container, Text } from "pixi.js";
+import { Text } from "pixi.js";
 import type { Point, Rect, ShapeHandler, TextShape } from "./types";
+import { ensureNodeView } from "./render/nodeView";
+import { getTextStyle } from "./render/style";
 
 const getBounds = (shape: TextShape): Rect => ({
   x: shape.position.x,
@@ -20,27 +22,18 @@ const hitTest = (shape: TextShape, point: Point) => {
 
 export const textHandler: ShapeHandler<TextShape> = {
   render: (shape, ctx) => {
-    const nodesLayer = ctx.layers?.nodes;
-    const viewCache = ctx.viewCache;
-    if (!(nodesLayer instanceof Container) || !(viewCache instanceof Map)) {
+    const container = ensureNodeView(ctx, {
+      id: shape.id,
+      position: shape.position,
+      size: shape.size,
+      rotation: shape.rotation,
+      cursor: "text"
+    });
+    if (!container) {
       return;
     }
 
-    const cached = viewCache.get(shape.id);
-    const container = cached instanceof Container ? cached : new Container();
-    const rotation = shape.rotation ?? 0;
-    const pivotX = shape.size.width / 2;
-    const pivotY = shape.size.height / 2;
-    container.pivot.set(pivotX, pivotY);
-    container.position.set(shape.position.x + pivotX, shape.position.y + pivotY);
-    container.rotation = rotation;
-    container.eventMode = "static";
-    container.cursor = "text";
-
-    const content = shape.data?.text ?? "Text";
-    const fontSize = shape.data?.fontSize ?? shape.style?.fontSize ?? 16;
-    const fontFamily = shape.data?.fontFamily ?? shape.style?.fontFamily ?? "Inter";
-    const fill = shape.style?.stroke ?? "#0f172a";
+    const { content, fontSize, fontFamily, fill } = getTextStyle(shape);
 
     let label = container.children.find((child) => child instanceof Text) as
       | Text
@@ -53,14 +46,21 @@ export const textHandler: ShapeHandler<TextShape> = {
       label.style = { fill, fontSize, fontFamily };
     }
     label.position.set(0, 0);
-
-    if (container.parent !== nodesLayer) {
-      nodesLayer.addChild(container);
-    }
-    viewCache.set(shape.id, container);
   },
   hitTest,
   getBounds,
+  getAnchors: (shape) => {
+    const bounds = getBounds(shape);
+    const cx = bounds.x + bounds.width / 2;
+    const cy = bounds.y + bounds.height / 2;
+    return [
+      { id: "c", position: { x: cx, y: cy } },
+      { id: "n", position: { x: cx, y: bounds.y } },
+      { id: "e", position: { x: bounds.x + bounds.width, y: cy } },
+      { id: "s", position: { x: cx, y: bounds.y + bounds.height } },
+      { id: "w", position: { x: bounds.x, y: cy } }
+    ];
+  },
   traits: {
     draggable: true,
     textEditable: true

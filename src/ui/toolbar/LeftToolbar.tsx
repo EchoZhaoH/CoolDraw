@@ -8,7 +8,7 @@ import {
   StickyNote
 } from "lucide-react";
 import { useCanvasActions } from "@/ui/hooks/useCanvasStore";
-import data from "../../../skills/china-population-2025-chart.json";
+import data from "../../../skills/zoom-fy2025-report.json";
 
 const LeftToolbar = () => {
   const actions = useCanvasActions();

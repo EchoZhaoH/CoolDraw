@@ -3,9 +3,12 @@ import { createStore } from "@/utils/store";
 import { createId } from "@/utils/id";
 import type {
   CanvasEdge,
+  CanvasConnectorNode,
+  CanvasGeometryNode,
   CanvasGroup,
   CanvasNode,
   CanvasState,
+  CanvasTextNode,
   Selection,
   Viewport
 } from "@/types/canvas";
@@ -46,9 +49,11 @@ const updateState = (
   setState(updater(store.getState()), options);
 };
 
-const createNode = (partial: Partial<CanvasNode> = {}): CanvasNode => ({
+const createGeometryNode = (
+  partial: Partial<CanvasGeometryNode> = {}
+): CanvasGeometryNode => ({
   id: partial.id ?? createId("node"),
-  type: partial.type ?? "geometry",
+  type: "geometry",
   kind: partial.kind ?? "rect",
   position: partial.position ?? { x: 120, y: 120 },
   size: partial.size ?? { width: 160, height: 96 },
@@ -56,18 +61,51 @@ const createNode = (partial: Partial<CanvasNode> = {}): CanvasNode => ({
   data: partial.data ?? {}
 });
 
+const createTextNode = (partial: Partial<CanvasTextNode> = {}): CanvasTextNode => ({
+  id: partial.id ?? createId("node"),
+  type: "text",
+  position: partial.position ?? { x: 120, y: 120 },
+  size: partial.size ?? { width: 180, height: 40 },
+  rotation: partial.rotation ?? 0,
+  data: partial.data ?? {}
+});
+
+const createNodeByType = (
+  partial: Partial<CanvasNode> & { type: CanvasNode["type"] }
+): CanvasNode => {
+  if (partial.type === "text") {
+    return createTextNode(partial as Partial<CanvasTextNode>);
+  }
+  if (partial.type === "connector") {
+    const connector: CanvasConnectorNode = {
+      id: partial.id ?? createId("node"),
+      type: "connector",
+      mode: partial.mode ?? "free",
+      source: partial.source ?? { position: { x: 80, y: 80 } },
+      target: partial.target ?? { position: { x: 240, y: 160 } },
+      position: partial.position ?? { x: 0, y: 0 },
+      size: partial.size ?? { width: 0, height: 0 },
+      rotation: partial.rotation ?? 0,
+      style: partial.style,
+      data: partial.data ?? {}
+    };
+    return connector;
+  }
+  return createGeometryNode(partial as Partial<CanvasGeometryNode>);
+};
+
 const actions = {
-  addNodes: (nodes: Partial<CanvasNode>[]) => {
+  addNodes: (nodes: Array<Partial<CanvasNode> & { type: CanvasNode["type"] }>) => {
     updateState((state) => ({
       ...state,
-      nodes: [...state.nodes, ...nodes.map(createNode)],
+      nodes: [...state.nodes, ...nodes.map(createNodeByType)],
       updatedAt: Date.now()
     }));
   },
-  addNode: (partial?: Partial<CanvasNode>) => {
+  addNode: (node: Partial<CanvasNode> & { type: CanvasNode["type"] }) => {
     updateState((state) => ({
       ...state,
-      nodes: [...state.nodes, createNode(partial)],
+      nodes: [...state.nodes, createNodeByType(node)],
       updatedAt: Date.now()
     }));
   },
@@ -76,8 +114,7 @@ const actions = {
       ...state,
       nodes: [
         ...state.nodes,
-        createNode({
-          type: "geometry",
+        createGeometryNode({
           kind,
           size: kind === "ellipse" ? { width: 140, height: 140 } : undefined
         })
@@ -90,11 +127,7 @@ const actions = {
       ...state,
       nodes: [
         ...state.nodes,
-        createNode({
-          type: "text",
-          size: { width: 180, height: 40 },
-          data: { text, fontSize: 16 }
-        })
+        createTextNode({ data: { text, fontSize: 16 } })
       ],
       updatedAt: Date.now()
     }));
@@ -103,10 +136,22 @@ const actions = {
     updateState((state) => ({
       ...state,
       nodes: state.nodes.map((node) =>
-        node.id === id ? { ...node, ...patch } : node
+        node.id === id ? ({ ...node, ...patch } as CanvasNode) : node
       ),
       updatedAt: Date.now()
     }));
+  },
+  updateNodePreview: (id: string, patch: Partial<CanvasNode>) => {
+    updateState(
+      (state) => ({
+        ...state,
+        nodes: state.nodes.map((node) =>
+          node.id === id ? ({ ...node, ...patch } as CanvasNode) : node
+        ),
+        updatedAt: Date.now()
+      }),
+      { pushHistory: false }
+    );
   },
   updateNodesPosition: (updates: Array<{ id: string; x: number; y: number }>) => {
     updateState((state) => {
@@ -121,7 +166,7 @@ const actions = {
           return {
             ...node,
             position: { x: next.x, y: next.y }
-          };
+          } as CanvasNode;
         }),
         updatedAt: Date.now()
       };
@@ -150,7 +195,7 @@ const actions = {
               position: next.position ?? node.position,
               size: next.size ?? node.size,
               rotation: next.rotation ?? node.rotation
-            };
+            } as CanvasNode;
           }),
           updatedAt: Date.now()
         };
@@ -180,7 +225,7 @@ const actions = {
             position: next.position ?? node.position,
             size: next.size ?? node.size,
             rotation: next.rotation ?? node.rotation
-          };
+          } as CanvasNode;
         }),
         updatedAt: Date.now()
       };
@@ -202,7 +247,7 @@ const actions = {
             return {
               ...node,
               position: { x: next.x, y: next.y }
-            };
+            } as CanvasNode;
           }),
           updatedAt: Date.now()
         };

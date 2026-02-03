@@ -1,0 +1,359 @@
+[
+  {
+    "id": "title_zoom_fy2025",
+    "type": "text",
+    "position": { "x": 80, "y": 36 },
+    "size": { "width": 720, "height": 32 },
+    "data": { "text": "Zoom 2025财年财报（示意）", "fontSize": 24, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "subtitle_note",
+    "type": "text",
+    "position": { "x": 80, "y": 72 },
+    "size": { "width": 760, "height": 18 },
+    "data": { "text": "结构示例，含配色与区块排版；数据为占位", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  },
+  {
+    "id": "section_overview",
+    "type": "text",
+    "position": { "x": 80, "y": 108 },
+    "size": { "width": 200, "height": 20 },
+    "data": { "text": "经营概览", "fontSize": 16, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "card_revenue",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 80, "y": 136 },
+    "size": { "width": 300, "height": 120 },
+    "style": { "fill": "#eef2ff", "stroke": "#c7d2fe", "strokeWidth": 1 }
+  },
+  {
+    "id": "revenue_title",
+    "type": "text",
+    "position": { "x": 96, "y": 150 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "收入", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#4f46e5", "textAlign": "left" }
+  },
+  {
+    "id": "revenue_value",
+    "type": "text",
+    "position": { "x": 96, "y": 174 },
+    "size": { "width": 268, "height": 32 },
+    "data": { "text": "4.5B（示意）", "fontSize": 24, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "revenue_note",
+    "type": "text",
+    "position": { "x": 96, "y": 210 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "同比 +6%（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#16a34a", "textAlign": "left" }
+  },
+  {
+    "id": "card_margin",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 400, "y": 136 },
+    "size": { "width": 300, "height": 120 },
+    "style": { "fill": "#ecfeff", "stroke": "#a5f3fc", "strokeWidth": 1 }
+  },
+  {
+    "id": "margin_title",
+    "type": "text",
+    "position": { "x": 416, "y": 150 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "营业利润率", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0ea5e9", "textAlign": "left" }
+  },
+  {
+    "id": "margin_value",
+    "type": "text",
+    "position": { "x": 416, "y": 174 },
+    "size": { "width": 268, "height": 32 },
+    "data": { "text": "29%（示意）", "fontSize": 24, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "margin_note",
+    "type": "text",
+    "position": { "x": 416, "y": 210 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "效率提升带动（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  },
+  {
+    "id": "card_fcf",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 720, "y": 136 },
+    "size": { "width": 300, "height": 120 },
+    "style": { "fill": "#fef9c3", "stroke": "#fde68a", "strokeWidth": 1 }
+  },
+  {
+    "id": "fcf_title",
+    "type": "text",
+    "position": { "x": 736, "y": 150 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "自由现金流", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#ca8a04", "textAlign": "left" }
+  },
+  {
+    "id": "fcf_value",
+    "type": "text",
+    "position": { "x": 736, "y": 174 },
+    "size": { "width": 268, "height": 32 },
+    "data": { "text": "1.8B（示意）", "fontSize": 24, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "fcf_note",
+    "type": "text",
+    "position": { "x": 736, "y": 210 },
+    "size": { "width": 268, "height": 18 },
+    "data": { "text": "现金回报稳健（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#64748b", "textAlign": "left" }
+  },
+  {
+    "id": "section_mix",
+    "type": "text",
+    "position": { "x": 80, "y": 276 },
+    "size": { "width": 240, "height": 20 },
+    "data": { "text": "收入结构（示意）", "fontSize": 16, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "mix_panel",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 80, "y": 304 },
+    "size": { "width": 640, "height": 260 },
+    "style": { "fill": "#ffffff", "stroke": "#e2e8f0", "strokeWidth": 1 }
+  },
+  {
+    "id": "mix_axis_y",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 334 },
+    "size": { "width": 2, "height": 200 },
+    "style": { "fill": "#94a3b8" }
+  },
+  {
+    "id": "mix_axis_x",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 120, "y": 534 },
+    "size": { "width": 560, "height": 2 },
+    "style": { "fill": "#94a3b8" }
+  },
+  {
+    "id": "mix_bar_enterprise",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 170, "y": 360 },
+    "size": { "width": 80, "height": 174 },
+    "style": { "fill": "#60a5fa", "stroke": "#1d4ed8", "strokeWidth": 1 }
+  },
+  {
+    "id": "mix_bar_online",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 310, "y": 410 },
+    "size": { "width": 80, "height": 124 },
+    "style": { "fill": "#34d399", "stroke": "#047857", "strokeWidth": 1 }
+  },
+  {
+    "id": "mix_bar_other",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 450, "y": 452 },
+    "size": { "width": 80, "height": 82 },
+    "style": { "fill": "#fbbf24", "stroke": "#b45309", "strokeWidth": 1 }
+  },
+  {
+    "id": "mix_label_enterprise",
+    "type": "text",
+    "position": { "x": 160, "y": 544 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "企业", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "mix_label_online",
+    "type": "text",
+    "position": { "x": 300, "y": 544 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "在线业务", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "mix_label_other",
+    "type": "text",
+    "position": { "x": 440, "y": 544 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "其他", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "center" }
+  },
+  {
+    "id": "mix_value_enterprise",
+    "type": "text",
+    "position": { "x": 160, "y": 338 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "2.6B（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#1d4ed8", "textAlign": "center" }
+  },
+  {
+    "id": "mix_value_online",
+    "type": "text",
+    "position": { "x": 300, "y": 388 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "1.6B（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#047857", "textAlign": "center" }
+  },
+  {
+    "id": "mix_value_other",
+    "type": "text",
+    "position": { "x": 440, "y": 430 },
+    "size": { "width": 100, "height": 18 },
+    "data": { "text": "0.3B（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#b45309", "textAlign": "center" }
+  },
+  {
+    "id": "section_highlights",
+    "type": "text",
+    "position": { "x": 760, "y": 276 },
+    "size": { "width": 240, "height": 20 },
+    "data": { "text": "经营亮点（示意）", "fontSize": 16, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "highlight_panel",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 760, "y": 304 },
+    "size": { "width": 300, "height": 260 },
+    "style": { "fill": "#f8fafc", "stroke": "#e2e8f0", "strokeWidth": 1 }
+  },
+  {
+    "id": "highlight_1",
+    "type": "text",
+    "position": { "x": 780, "y": 324 },
+    "size": { "width": 260, "height": 18 },
+    "data": { "text": "• 企业客户续费率保持稳定（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "highlight_2",
+    "type": "text",
+    "position": { "x": 780, "y": 350 },
+    "size": { "width": 260, "height": 18 },
+    "data": { "text": "• AI协作与联络中心带动增购（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "highlight_3",
+    "type": "text",
+    "position": { "x": 780, "y": 376 },
+    "size": { "width": 260, "height": 18 },
+    "data": { "text": "• 产品组合聚焦高毛利业务（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "highlight_4",
+    "type": "text",
+    "position": { "x": 780, "y": 402 },
+    "size": { "width": 260, "height": 18 },
+    "data": { "text": "• 国际市场稳健增长（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "section_outlook",
+    "type": "text",
+    "position": { "x": 80, "y": 592 },
+    "size": { "width": 240, "height": 20 },
+    "data": { "text": "指引与展望（示意）", "fontSize": 16, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "outlook_panel",
+    "type": "geometry",
+    "kind": "rect",
+    "position": { "x": 80, "y": 620 },
+    "size": { "width": 980, "height": 120 },
+    "style": { "fill": "#ffffff", "stroke": "#e2e8f0", "strokeWidth": 1 }
+  },
+  {
+    "id": "outlook_1",
+    "type": "text",
+    "position": { "x": 100, "y": 640 },
+    "size": { "width": 940, "height": 18 },
+    "data": { "text": "• 预计2026财年保持温和增长，持续投入AI与协作平台（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "outlook_2",
+    "type": "text",
+    "position": { "x": 100, "y": 666 },
+    "size": { "width": 940, "height": 18 },
+    "data": { "text": "• 关注企业渗透率、联络中心渗透与全球化推进（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#0f172a", "textAlign": "left" }
+  },
+  {
+    "id": "outlook_3",
+    "type": "text",
+    "position": { "x": 100, "y": 692 },
+    "size": { "width": 940, "height": 18 },
+    "data": { "text": "• 风险提示：宏观需求波动与竞争加剧（示意）", "fontSize": 12, "fontFamily": "Inter" },
+    "style": { "stroke": "#ef4444", "textAlign": "left" }
+  },
+  {
+    "id": "connector_overview_to_mix",
+    "type": "connector",
+    "mode": "free",
+    "source": { "position": { "x": 230, "y": 256 } },
+    "target": { "position": { "x": 230, "y": 304 } },
+    "position": { "x": 0, "y": 0 },
+    "size": { "width": 0, "height": 0 },
+    "style": {
+      "stroke": "#94a3b8",
+      "strokeWidth": 2,
+      "lineType": "orthogonal",
+      "arrowEnd": { "type": "triangle", "size": 8, "filled": true }
+    }
+  },
+  {
+    "id": "connector_mix_to_highlight",
+    "type": "connector",
+    "mode": "free",
+    "source": { "position": { "x": 720, "y": 434 } },
+    "target": { "position": { "x": 760, "y": 434 } },
+    "position": { "x": 0, "y": 0 },
+    "size": { "width": 0, "height": 0 },
+    "style": {
+      "stroke": "#94a3b8",
+      "strokeWidth": 2,
+      "lineType": "straight",
+      "arrowEnd": { "type": "triangle", "size": 8, "filled": true }
+    }
+  },
+  {
+    "id": "connector_highlight_to_outlook",
+    "type": "connector",
+    "mode": "free",
+    "source": { "position": { "x": 910, "y": 564 } },
+    "target": { "position": { "x": 910, "y": 620 } },
+    "position": { "x": 0, "y": 0 },
+    "size": { "width": 0, "height": 0 },
+    "style": {
+      "stroke": "#94a3b8",
+      "strokeWidth": 2,
+      "lineType": "orthogonal",
+      "arrowEnd": { "type": "triangle", "size": 8, "filled": true }
+    }
+  }
+]
