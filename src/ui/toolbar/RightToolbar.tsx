@@ -2,7 +2,7 @@ import { ZoomIn, ZoomOut, Maximize, Hand, Move } from "lucide-react";
 
 const RightToolbar = () => {
   return (
-    <aside className="floating-bar floating-bar--right">
+    <aside className="floating-bar floating-bar--right tool-rack">
       <button type="button" className="icon-btn">
         <ZoomIn size={16} />
       </button>

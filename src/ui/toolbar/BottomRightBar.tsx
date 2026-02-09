@@ -2,7 +2,7 @@ import { HelpCircle, MessageCircle } from "lucide-react";
 
 const BottomRightBar = () => {
   return (
-    <div className="floating-bar floating-bar--bottom-right">
+    <div className="floating-bar floating-bar--bottom-right tool-strip tool-strip--compact">
       <button type="button" className="icon-btn">
         <MessageCircle size={16} />
       </button>
